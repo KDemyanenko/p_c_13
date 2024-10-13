@@ -1,0 +1,67 @@
+fn main() {
+    let shipments = vec![1, 1, 1, 1, 6]; 
+    let moves = count_permutation(&shipments);
+    
+    if moves == usize::MAX {
+        println!("-1");} 
+        else {println!("{}", moves); 
+    }
+
+    let random_shipments = gen_shipments(5); 
+    println!("{:?}", random_shipments);
+}
+
+
+fn count_permutation(shipments: &Vec<u32>) -> usize {
+    let total: u32 = shipments.iter().sum(); 
+    let n = shipments.len() as u32; 
+    if total % n != 0 {
+        return usize::MAX; 
+    }
+
+    let average = total / n; 
+    let mut moves = 0;
+    for &weight in shipments {
+        if weight > average {moves += weight - average;
+        }
+    }
+    moves as usize 
+}
+
+
+fn gen_shipments(n: usize) -> Vec<u32> {
+    let mut shipments = Vec::new();
+    for _ in 0..n {
+        let weight = (get_seed() % 10 + 1) as u32; 
+        shipments.push(weight); 
+    }
+    shipments 
+}
+
+
+fn get_seed() -> u32 {
+    let seed = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .expect("Time went backwards")
+        .as_millis() as u32;
+    seed
+}
+
+
+
+
+Спочатку я створив основну функцію main, де визначив вектор shipments, що містить вантажі. Я ініціював його з значеннями [1, 1, 1, 1, 6].
+
+Після цього я викликав функцію count_permutation, щоб обчислити, скільки переміщень потрібно, щоб вантажі стали рівномірно розподіленими.
+
+Далі я перевірив, чи повернула функція значення usize::MAX. Якщо так, це означало, що неможливо досягти рівномірного розподілу, і я вивів -1. Інакше, я вивів кількість переміщень.
+
+Потім я викликав функцію gen_shipments, щоб згенерувати вектор з 5 випадковими вантажами. Я вивів цей вектор, щоб побачити згенеровані значення.
+
+У функції count_permutation я обчислюю загальну вагу вантажів, використовуючи метод iter().sum(), а також визначаю кількість кораблів. Якщо загальна вага не ділиться на кількість кораблів, я повертаю usize::MAX, що означає, що рівномірний розподіл неможливий.
+
+Я також обчислюю середній вантаж, а потім проходжу по кожному вантажу у векторі. Якщо вантаж більше середнього, я підраховую, скільки потрібно перемістити, додаючи різницю до змінної moves.
+
+У функції gen_shipments я створюю пустий вектор для вантажів. Використовуючи цикл, я генерую випадкові вантажі в діапазоні від 1 до 10. Я викликав функцію get_seed, щоб отримати "випадкове" число на основі поточного часу. Потім я додаю це число у вектор вантажів.
+
+У функції get_seed я отримую поточний час з системи, відраховуючи його від часу UNIX-епохи, і перетворюю його на мілісекунди. Я використовую це значення як "насіння" для генерації випадкових вантажів.
